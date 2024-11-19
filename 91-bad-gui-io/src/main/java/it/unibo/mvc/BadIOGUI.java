@@ -10,11 +10,17 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -45,6 +51,13 @@ public class BadIOGUI {
         canvas.add(write, BorderLayout.CENTER);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        final JPanel myCanvas = new JPanel();
+        myCanvas.setLayout(new BoxLayout(myCanvas, BoxLayout.X_AXIS));
+        canvas.add(myCanvas, BorderLayout.CENTER);
+        myCanvas.add(write);
+        final JButton read = new JButton("Read file");
+        myCanvas.add(read);
         /*
          * Handlers
          */
@@ -65,6 +78,20 @@ public class BadIOGUI {
                     e1.printStackTrace(); // NOPMD: allowed as this is just an exercise
                 }
             }
+        });
+        read.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try (InputStream inputStream = new BufferedInputStream(new FileInputStream(PATH))) {
+                    final List<String> list = new ArrayList<>(Files.readAllLines(Paths.get(PATH), StandardCharsets.UTF_8));
+                    for(var elem: list) {
+                        System.out.println(elem);
+                    }
+                } catch (IOException e2) {
+                    JOptionPane.showMessageDialog(frame, e, "error", JOptionPane.ERROR_MESSAGE);
+                    e2.printStackTrace();
+                }
+            } 
         });
     }
 
