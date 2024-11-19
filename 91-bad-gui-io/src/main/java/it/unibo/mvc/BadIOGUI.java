@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,11 +80,11 @@ public class BadIOGUI {
         });
         read.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 try (InputStream inputStream = new BufferedInputStream(new FileInputStream(PATH))) {
                     final List<String> list = new ArrayList<>(Files.readAllLines(Paths.get(PATH), StandardCharsets.UTF_8));
-                    for(var elem: list) {
-                        System.out.println(elem);
+                    for(final var elem: list) {
+                        System.out.println(Integer.parseInt(elem));
                     }
                 } catch (IOException e2) {
                     JOptionPane.showMessageDialog(frame, e, "error", JOptionPane.ERROR_MESSAGE);
